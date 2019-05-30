@@ -1,0 +1,3 @@
+[submodule "C-Vector-Generic"]
+	path = C-Vector-Generic
+	url = git@github.com:CoralRocker/C-Vector-Generic.git
