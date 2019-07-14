@@ -8,6 +8,15 @@
 #include "C-Vector-Generic/Vector.h"
 #include <string.h>
 
+#define KNRM  "\x1B[0m"
+#define KRED  "\x1B[31m"
+#define KGRN  "\x1B[32m"
+#define KYEL  "\x1B[33m"
+#define KBLU  "\x1B[34m"
+#define KMAG  "\x1B[35m"
+#define KCYN  "\x1B[36m"
+#define KWHT  "\x1B[37m"
+
 int main(int argc, char *argv[])
 {
     	int f_d;
@@ -15,7 +24,7 @@ int main(int argc, char *argv[])
 	getcwd(o_path, 1024);
 	struct stat finfo;
 
-	printf("What is the relative (or absolute) position of the directory to send pictures to?: ");
+	printf("What is the relative (or absolute) position of the directory to send file(s) to?: ");
 	scanf("%s", dst);
 
 	DIR *folder = opendir(dst);
@@ -36,7 +45,7 @@ int main(int argc, char *argv[])
 		f_d = open(path, O_RDONLY);
 		if(f_d < 0)
 		{
-			printf("%s: invalid file\n", path);
+			printf("%s%s: invalid file\n%s",KRED, path, KRED);
 			break;
 		}
 		fstat(f_d, &finfo);
@@ -53,15 +62,15 @@ int main(int argc, char *argv[])
 	chdir(o_path);
 	closedir(folder);
 
-	printf("\nHere is the finalized list of available directories to send the picture(s) to: \n");
+	printf("\nHere is the finalized list of available directories to send the file(s) to: \n");
 	for(int i = 0; i < dirs->size; i++)
 	{
-		printf("Directory (%3d): %s\n", i, atVector(dirs, i));
+		printf("%sDirectory (%3d): %s\n%s", KGRN, i, atVector(dirs, i), KNRM);
 	}
 
 	puts(" ");
 
-	printf("Where are the pictures to move to the destination?: ");
+	printf("Where are the files to move to the destination?: ");
 	scanf("%s", src);
 
 	folder = opendir(src);
@@ -71,17 +80,17 @@ int main(int argc, char *argv[])
 		if(dp->d_name[0] == '.')
 			continue;
 		printf("\nFile: %s\n", dp->d_name);
-		printf("Move file?(y/N): ");
+		printf("%sMove file?(y/N): %s", KCYN, KNRM);
 		char answer[16];
 		scanf("%s", answer);
 		if(answer[0] == 'y' || answer[0] == 'Y')
 		{
-			printf("Move file\nWhere to move file?:\n");		
+			printf("%sMove file\nWhere to move file?:\n%s", KCYN, KNRM);		
 			for(int i = 0; i < dirs->size; i++)
 			{
-				printf("Directory (%3d): %s\n", i, atVector(dirs, i));
+				printf("Directory (%s%3d%s): %s\n", KGRN, i, KNRM, atVector(dirs, i));
 			}
-			printf("NUMBER OF DIRECTORY TO SEND FILE TO: ");
+			printf("%sNUMBER OF DIRECTORY TO SEND FILE TO: %s", KCYN, KNRM);
 			int whereto;
 			scanf("%d", &whereto);
 			printf("%d\n", whereto);
@@ -90,9 +99,9 @@ int main(int argc, char *argv[])
 			strcat(name, atVector(dirs, whereto));
 			strcat(name, "/");
 			strcat(name, dp->d_name);
-			printf("File: %s\n", name);
+			printf("%sFile: %s\n%s", KGRN, name, KNRM);
 			FILE *out = fopen(name, "w");
-			printf("INFILE: %p\nOUTFILE: %p\n", in, out);
+			printf("%sINFILE: %p\nOUTFILE: %p\n%s", KGRN, in, out, KNRM);
 			char c;
 			while((c = fgetc(in))!=EOF)
 					putc(c, out);
